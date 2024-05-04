@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FirestoreService } from './admin/service/firestore.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  private firestoreService = inject(FirestoreService)
+  constructor( ) {
+    this.firestoreService.initializeFirebase()
+  }
 }

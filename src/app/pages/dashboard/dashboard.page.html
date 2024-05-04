@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">dashboard</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div style="    display: flex;
+  justify-content: space-around;align-items: center;">
+    <ion-item>
+      <ion-select label="Team 1" (ionChange)="onSelectTeam($event, 'team_one')">
+        <ion-select-option [value]="team" *ngFor="let team of teams">{{team.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div (click)="toggleTab()">
+      <ion-icon style="    font-size: 24px;" name="swap-horizontal-outline"></ion-icon>
+    </div>
+    <ion-item>
+      <ion-select label="Team 2" (ionChange)="onSelectTeam($event, 'team_two')">
+        <ion-select-option [value]="team" *ngFor="let team of teams">{{team.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+
+
+  <ng-container *ngIf="team == 'team_one'">
+    <div style="text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 16px;">{{team_one_name}}</div>
+    <ion-list>
+      <div class="player-container" *ngFor="let  player of team_one_players">
+        <div class="name">
+          {{player.data.name}}
+        </div>
+        <ng-container *ngIf="player.data | hs as stats">
+          <div class="info">BAT : {{stats['batting']}} | HR : {{stats['hr']}} | 25+ runs : {{stats['runs_frequency']}}
+          </div>
+          <div class="info">BOWL : {{stats['bowling']}} | HW : {{stats['hw']}} | 1+ wicktes :
+            {{stats['wicktet_frequency']}}</div>
+        </ng-container>
+      </div>
+    </ion-list>
+  </ng-container>
+  <ng-container *ngIf="team == 'team_two'">
+    <div style="text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 16px;">{{team_two_name}}</div>
+    <ion-list>
+      <div class="player-container" *ngFor="let  player of team_two_players">
+        <div class="name">
+          {{player.data.name}}
+        </div>
+        <ng-container *ngIf="player.data | hs as stats">
+          <div class="info">BAT : {{stats['batting']}} | HR : {{stats['hr']}} | 25+ runs : {{stats['runs_frequency']}}
+          </div>
+          <div class="info">BOWL : {{stats['bowling']}} | HW : {{stats['hw']}} | 1+ wicktes :
+            {{stats['wicktet_frequency']}}</div>
+        </ng-container>
+      </div>
+    </ion-list>
+  </ng-container>
+</ion-content>

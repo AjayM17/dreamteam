@@ -29,7 +29,7 @@
             Teams
           </ion-label>
           <ion-button *ngIf="selected_menu_item == 'teams'" id="open-modal"> Add New Team</ion-button>
-          <ion-button *ngIf="selected_menu_item == 'players'" id="open-player-modal"> Add New Player</ion-button>
+          <ion-button *ngIf="selected_menu_item == 'players'" id="open-player-modal" (click)="resetPlayerInfo()"> Add New Player</ion-button>
         </div>
 
       </ion-title>
@@ -78,7 +78,7 @@
           </div>
          
           <div>
-            <ion-button (click)="editPlayer(player)" id="open-player-modal">
+            <ion-button (click)="editPlayer(player)">
               Edit
             </ion-button>
             <ion-button (click)="deletePlayer(player.id)">

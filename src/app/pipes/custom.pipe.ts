@@ -19,8 +19,8 @@ export class CustomPipe implements PipeTransform {
 export class HighScore implements PipeTransform {
 
   transform(value: any): any {
-    const runs = value['score'].split(",").map(Number)
-    const wickets = value['wickets'].split(",").map(Number)
+    const runs =  value['score'].trim() != '' ?  value['score'].split(",").map(Number) :[] 
+    const wickets =  value['wickets'].trim() != '' ?  value['wickets'].split(",").map(Number) : []
     const stats = {
       batting:runs.length,
       hr: Math.max(...runs),
@@ -29,6 +29,7 @@ export class HighScore implements PipeTransform {
       hw:Math.max(...wickets),
       wicktet_frequency: this.countGreaterThan1(wickets)
     }
+    console.log(stats)
     return stats
   }
 

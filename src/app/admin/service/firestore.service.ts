@@ -16,7 +16,6 @@ export class FirestoreService {
     this.app = initializeApp(environment.firebase)
     this.db = getFirestore(this.app)
     //  this.addPlayer()
-
   }
 
    addTeam(name: string):Observable<any> {
@@ -52,6 +51,8 @@ export class FirestoreService {
   }
 
   async updatePlayerInfo(player_id:string, info:any){
+    console.log(player_id)
+    console.log(info)
     const playerInfoRef = doc(this.db, "players", player_id);
     return await updateDoc(playerInfoRef,info)
   }

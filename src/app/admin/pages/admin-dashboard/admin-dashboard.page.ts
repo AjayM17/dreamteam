@@ -54,7 +54,7 @@ export class AdminDashboardPage implements OnInit {
   }
 
   onPlayerModalWillDismiss(event: Event) {
-
+    this.togglePlayerModal = false
   }
 
   confirmPlayerModal() {
@@ -65,6 +65,7 @@ export class AdminDashboardPage implements OnInit {
       team_id:this.player_team_id,
       team_name:this.player_team_name
     }
+    console.log(player_info)
     if(this.edit){
       this.firestoreService.updatePlayerInfo(this.player_id,player_info)
     } else {
@@ -93,8 +94,9 @@ export class AdminDashboardPage implements OnInit {
   }
 
   onSelectPlayerTeam(event: any) {
-    this.player_team_name = event.detail.value['name']
-    this.player_team_id = event.detail.value['id']
+    const team = this.teams.find( team => team.id  == event.detail.value)
+    this.player_team_name = team['name']
+    this.player_team_id = team['id']
   }
 
   editPlayer(player:any){
@@ -106,10 +108,17 @@ export class AdminDashboardPage implements OnInit {
     this.player_wicktes = player['data']['wickets']
     this.player_team_id = player['data']['team_id']
     this.player_team_name = player['data']['team_name']
-
   }
 
   deletePlayer(player_id:string){
     this.firestoreService.deletePlayer(player_id)
+  }
+
+  resetPlayerInfo(){
+    this.player_name = ''
+    this.player_score = ''
+    this.player_wicktes = ''
+    this.player_team_id = ''
+    this.player_team_name = ''
   }
 }

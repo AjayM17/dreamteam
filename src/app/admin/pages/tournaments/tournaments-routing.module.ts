@@ -1,17 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AdminDashboardPage } from './admin-dashboard.page';
+import { TournamentsPage } from './tournaments.page';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  },
-  {
-    path: '',
-    component: AdminDashboardPage
+    component: TournamentsPage
   }
 ];
 
@@ -19,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AdminDashboardPageRoutingModule {}
+export class TournamentsPageRoutingModule {}

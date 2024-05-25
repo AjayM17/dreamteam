@@ -1,0 +1,21 @@
+.main-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    padding: 0px 24px;
+    ion-item {
+        margin-bottom: 18px;
+        padding: 2px 0px;
+        --border-style: none;
+        color: #404040;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        width: 100%;
+    }
+    ion-button{
+        width: 100%;
+        color: white;
+    }
+}

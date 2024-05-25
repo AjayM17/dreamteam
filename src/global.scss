@@ -37,6 +37,14 @@
 // @import "@ionic/angular/css/palettes/dark.system.css";
 
 
+@media(min-width: 768px) {
+    ion-content{
+        --padding-start: 12%;
+    --padding-end: 12%;
+    }
+}
+
+
 ion-input {
     --caret-color: none !important;
     --highlight-color-focused: none !important;

@@ -45,14 +45,11 @@ export class TeamPlayersPage implements OnInit {
     })
   }
   updatePlayer(event:any, player:any,key:string){
-    console.log(player)
     player['data'][key] =  event.target.value
-    console.log(player)
-    // this.firestoreService.updatePlayerInfo(player.id,player.data)
+    this.firestoreService.updatePlayerInfo(player.id,player.data)
   }
 
   removePlayerFromTeam(player:any){
-    console.log(player)
     player['data']['team_id'] =  ''
     this.firestoreService.updatePlayerInfo(player.id,player.data)
   }

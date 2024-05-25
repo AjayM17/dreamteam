@@ -1,37 +1,76 @@
 .player-card {
+    // background-color: var(--ion-player-card-bg);
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     margin: 16px;
     border-radius: 6px;
-    .header{
+    .header {
         margin-bottom: 12px;
-    border-bottom: 1px solid #ddd;
-    }
-    .name {
-        font-size: 16px;
-        font-weight: 500;
-    }
-    .title{
-        font-size: 15px;
-        font-weight: 500;
-    }
-    .info {
-        text-align: right;
-        .text {
+        border-bottom: 1px solid var(--ion-color-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px;
+        .name{
+            font-weight: 500;
             font-size: 18px;
         }
-        .sub-text{
-            font-size: 12px;
+        .info {
+            flex-direction: column;
+            align-items: flex-start;
+            .text {
+                .hrw {
+                    color: var(--ion-color-hrw);
+                }
+            }
+            .sub-text {
+                margin-left: 8px;
+                font-size: 13px;
+            }
         }
     }
-    .footer{
+
+    .content {
+        background: #f2f9f1;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 8px;
+        .text {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            font-weight: var(--ion-font-weight-bold);
+
+            .rf {
+                color: var(--ion-color-rf);
+                font-size: 32px;
+            }
+            .wf {
+                color: var(--ion-color-wf);
+                font-size: 32px;
+            }
+        }
+        .sub-text {
+            margin-left: 8px;
+            font-size: 13px;
+        }
+    }
+
+    .footer {
         margin-bottom: 8px;
-        font-size: 13px;
+        font-size: var(--ion-font-size-m-low);
         margin-top: 12px;
-        border-top: 1px solid #ddd;
+        border-top: 1px solid var(--ion-color-border);
         padding: 4px 8px;
-        div{
-            margin-bottom: 3px;
-            margin-top: 3px;
+        // font-weight: var(--ion-font-weight-bold);
+        .finfo {
+            margin-bottom: 2px;
+            margin-top: 2px;
+            .title {
+                margin-right: 6px;
+            }
+            .value {
+                letter-spacing: 1px;
+            }
         }
     }
 }

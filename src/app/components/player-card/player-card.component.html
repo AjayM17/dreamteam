@@ -1,37 +1,29 @@
-<div class="player-card" *ngIf="player.data | hs as stats">
-  <ion-grid >
-    <ion-row class="header">
-      <ion-col size="7">
-        <div class="name">{{player.data.name}}</div>
-      </ion-col>
-      <ion-col size="5" class="info">
-        <div class="text">{{stats['hr']}} <span class="sub-text">(High Score)</span></div>
-
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <div class="title"> 25+ Runs</div>
-      </ion-col>
-      <ion-col class="info" size="8">
-        <div class="text">{{stats['runs_frequency']}} Hits <span class="sub-text"> (In {{stats['batting']}} Innings)</span></div>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4">
-        <div class="title"> 1+ Wicktes</div>
-      </ion-col>
-      <ion-col class="info" size="8">
-        <div class="text">{{stats['wicktet_frequency']}} Hits <span class="sub-text"> (In {{stats['bowling']}} Innings)</span></div>
-      </ion-col>
-    </ion-row>
-
-
-  </ion-grid>
-  <div class="footer">
-    <div> Runs: {{player.data.score}}</div>
-    <div> Wicktes: {{player.data.wickets}}</div>
+<ng-container *ngIf="player.data | hs as stats">
+  <div class="player-card" *ngIf="stats['runs_frequency'] != 0 || stats['wicktet_frequency'] != 0 ">
+    <div class="header">
+      <div class="name">{{player.data.name | titlecase }}</div>
+      <div class="info">
+        <div *ngIf="stats['hr'] != ''" class="text"> <span class="hrw"> {{stats['hr']}}</span> <span
+            class="sub-text">(Highest Run)</span></div>
+        <div *ngIf="stats['hw'] != ''" class="text"><span class="hrw">{{stats['hw']}}</span> <span
+            class="sub-text">(Highest Wicket)</span></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="text" *ngIf="stats['runs_frequency'] != 0">
+        <span class="rf">{{stats['runs_frequency']}}</span> <span class="sub-text">Times (25+ runs In
+          {{stats['batting']}} Innings)</span>
+      </div>
+      <div class="text" *ngIf="stats['wicktet_frequency'] != 0">
+        <span class="wf">{{stats['wicktet_frequency']}} </span> <span class="sub-text">Times (1+ wickets In
+          {{stats['bowling']}} Innings)</span>
+      </div>
+    </div>
+  
+    <div class="footer">
+      <div class="finfo"><span class="title">Match Runs:</span><span class="value">{{player.data.score}}</span></div>
+      <div class="finfo"><span class="title">Match Wicktes:</span> <span class="value">{{player.data.wickets}}</span>
+      </div>
+    </div>
   </div>
-</div>
+</ng-container>

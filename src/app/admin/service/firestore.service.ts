@@ -13,17 +13,56 @@ export class FirestoreService {
   db: any
   constructor() { }
   initializeFirebase() {
-    this.app = initializeApp(environment.firebase)
+    this.app = initializeApp(environment.firebase_dev)
     this.db = getFirestore(this.app)
     //  this.addPlayer()
   }
 
-   addTeam(name: string):Observable<any> {
+
+  createMatch(match: any):Observable<any>{
     return new Observable( (observer) => {
       try {
-        addDoc(collection(this.db, "teams"), {
+        addDoc(collection(this.db, "matches"), match)
+        .then( docRef => {
+          observer.next(docRef)
+        })
+      } catch (e) {
+      }
+    })
+  }
+
+  createTournament(name: string):Observable<any>{
+    return new Observable( (observer) => {
+      try {
+        addDoc(collection(this.db, "tournaments"), {
           name: name
         })
+        .then( docRef => {
+          observer.next(docRef)
+        })
+      } catch (e) {
+      }
+    })
+  }
+
+  createPlayer(name: string):Observable<any>{
+    return new Observable( (observer) => {
+      try {
+        addDoc(collection(this.db, "players"), {
+          name: name
+        })
+        .then( docRef => {
+          observer.next(docRef)
+        })
+      } catch (e) {
+      }
+    })
+  }
+
+   addTeam(team: any):Observable<any> {
+    return new Observable( (observer) => {
+      try {
+        addDoc(collection(this.db, "teams"), team)
         .then( docRef => {
           observer.next(docRef)
         })
@@ -42,8 +81,22 @@ export class FirestoreService {
  
   }
 
+  async getTournaments() {
+    return( await (await getDocs(collection(this.db, "tournaments"))).docs.map( data => ( {id:data.id,name:data.data()['name']})))
+  }
+
+  async getTournamentTeams(tournament_id:string) {
+    const q = query(collection(this.db, "teams"), where("tournament_id", "==", tournament_id));
+    return( await (await getDocs(q)).docs.map( data => ( {id:data.id,name:data.data()['name']})))
+  }
+
   async getAllTeams() {
     return( await (await getDocs(collection(this.db, "teams"))).docs.map( data => ( {id:data.id,name:data.data()['name']})))
+  }
+
+  async getTournamentMatches(tournament_id:string) {
+    const q = query(collection(this.db, "matches"), where("tournament_id", "==", tournament_id));
+    return( await (await getDocs(q)).docs.map( data => ( {id:data.id,data:data.data()})))
   }
 
   async getAllPlayers() {

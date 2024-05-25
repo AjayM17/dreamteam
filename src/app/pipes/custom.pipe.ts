@@ -21,12 +21,14 @@ export class HighScore implements PipeTransform {
   transform(value: any): any {
     const runs =  value['score'].trim() != '' ?  value['score'].split(",").map(Number) :[] 
     const wickets =  value['wickets'].trim() != '' ?  value['wickets'].split(",").map(Number) : []
+    console.log(runs)
+    console.log(wickets)
     const stats = {
       batting:runs.length,
-      hr: Math.max(...runs),
+      hr: runs.length != 0 ? Math.max(...runs) : '',
       runs_frequency: this.countGreaterThan24(runs),
       bowling:wickets.length,
-      hw:Math.max(...wickets),
+      hw: wickets.length != 0 ? Math.max(...wickets) : '',
       wicktet_frequency: this.countGreaterThan1(wickets)
     }
     console.log(stats)

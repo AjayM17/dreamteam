@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FirestoreService } from 'src/app/admin/service/firestore.service';
+import { FirestoreService } from 'src/app/service/firestore.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,9 +27,7 @@ export class DashboardPage implements OnInit {
 
   async getTeams() {
     this.teams = await this.firestoreService.getAllTeams()
-    console.log(this.teams)
     this.default_selected_team = this.teams[0]
-    console.log(this.default_selected_team)
     this.team_one_players = await this.firestoreService.getPlayersByTeam(this.teams[0]['id'])
     this.team_one_name =  this.teams[0]['name']
   }
@@ -42,7 +40,6 @@ export class DashboardPage implements OnInit {
       this.selected_team = 'team_one'
      this.team_one_name = event.detail.value['name']
       this.team_one_players = await this.firestoreService.getPlayersByTeam(event.detail.value['id'])
-      console.log(this.team_one_players)
     } else {
       this.selected_team = 'team_two'
       this.team_two_name = event.detail.value['name']

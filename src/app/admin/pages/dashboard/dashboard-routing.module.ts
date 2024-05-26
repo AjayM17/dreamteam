@@ -21,6 +21,14 @@ const routes: Routes = [
         loadChildren: () => import('../tournaments-info/tournaments-info.module').then(m => m.TournamentsInfoPageModule)
       },
       {
+        path: 'team-info',
+        loadChildren: () => import('../team-info/team-info.module').then( m => m.TeamInfoPageModule)
+      },
+      {
+        path: 'match-info',
+        loadChildren: () => import('../match-info/match-info.module').then( m => m.MatchInfoPageModule)
+      },
+      {
         path: '',
         redirectTo: '/admin/dashboard/tournaments',
         pathMatch: 'full'

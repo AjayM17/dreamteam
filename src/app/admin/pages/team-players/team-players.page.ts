@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FirestoreService } from '../../service/firestore.service';
+import { FirestoreService } from '../../../service/firestore.service';
 
 @Component({
   selector: 'app-team-players',
@@ -16,8 +16,6 @@ export class TeamPlayersPage implements OnInit {
   constructor() { 
    this.team_id = this.activatedRoute.snapshot.params['id'];
    this.team_name = this.activatedRoute.snapshot.params['name'];
-   console.log(this.team_id)
-   console.log(this.team_name)
     this.getPlayers()
   }
 
@@ -27,7 +25,6 @@ export class TeamPlayersPage implements OnInit {
 
   async getPlayers(){
   this.players =  await this.firestoreService.getPlayersByTeam(this.team_id)
-  console.log(this.players)
   }
 
   addNewPlayer(){
@@ -38,7 +35,6 @@ export class TeamPlayersPage implements OnInit {
       team_id:this.team_id,
       team_name:this.team_name
     }
-    console.log(player_info)
     this.firestoreService.addPlayer(player_info).subscribe(res => {
       this.new_player_name = ''
       this.getPlayers()

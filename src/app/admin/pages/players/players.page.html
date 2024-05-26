@@ -18,11 +18,11 @@
       </ion-card-header>
     </ion-card>
     <ion-list>
-      <!-- <ion-card *ngFor="let tournament of tournaments" (click)="tournamentInfo(tournament)">
+      <ion-card *ngFor="let player of players">
         <ion-card-header>
-          <ion-card-title>{{tournament.name}}</ion-card-title>
+          <ion-card-title>{{player.name}}</ion-card-title>
         </ion-card-header>
-      </ion-card> -->
+      </ion-card>
     </ion-list>
     <ion-alert trigger="create-player-alert" header="Create Player" [buttons]="alertButtons"
       [inputs]="alertInputs" (didDismiss)=onAlertDismiss($event)></ion-alert>

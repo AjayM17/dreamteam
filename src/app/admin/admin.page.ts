@@ -8,7 +8,6 @@ import { Component, OnInit } from '@angular/core';
 export class AdminPage implements OnInit {
 
   constructor() { 
-    console.log('admin module')
   }
 
   ngOnInit() {

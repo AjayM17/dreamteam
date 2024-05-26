@@ -15,25 +15,12 @@ const routes: Routes = [
       path: 'dashboard',
       loadChildren: () => import('../admin/pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
     },
-    // {
-    //   path: 'tournaments',
-    //   loadChildren: () => import('./pages/tournaments/tournaments.module').then( m => m.TournamentsPageModule)
-    // },
-    // {
-    //   path: 'tournaments-info',
-    //   loadChildren: () => import('./pages/tournaments-info/tournaments-info.module').then( m => m.TournamentsInfoPageModule)
-    // },
-    // {
-    //   path: 'players',
-    //   loadChildren: () => import('./pages/players/players.module').then( m => m.PlayersPageModule)
-    // },
     {
       path: '',
       redirectTo: '/admin/login',
       pathMatch: 'full'
     }]
   }
-
 ];
 
 @NgModule({

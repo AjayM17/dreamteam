@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FirestoreService } from '../../service/firestore.service';
+import { FirestoreService } from '../../../service/firestore.service';
 
 @Component({
   selector: 'app-players',
@@ -33,18 +33,21 @@ export class PlayersPage implements OnInit {
   constructor(private firestoreService: FirestoreService) { }
 
   ngOnInit() {
+    this.getPlayers()
   }
 
   onAlertDismiss(event:any){
-    console.log(event)
     if(event['detail']['role'] == 'confirm'){
       const player_name  = event['detail']['data']['values'][0]
-      console.log(player_name)
      if(player_name.trim() != ''){
-      this.firestoreService.createTournament(player_name).subscribe( res => {
-        console.log(res)
+      this.firestoreService.createPlayer(player_name).subscribe( res => {
+        this.getPlayers()
       })
      }
     }
+  }
+
+  async getPlayers(){
+    this.players = await this.firestoreService.getAllPlayers()
   }
 }

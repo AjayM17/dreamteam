@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core';
-import { FirestoreService } from '../../service/firestore.service';
+import { FirestoreService } from '../../../service/firestore.service';
 
 @Component({
   selector: 'app-tournaments-info',
@@ -16,7 +16,7 @@ export class TournamentsInfoPage implements OnInit {
   message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
   name: string = '';
   tournament: any
-  active_tab = 'matches'
+  active_tab = 'teams'
   teams: any[] = []
   matches: any[] = []
   team_one_id: string = ''
@@ -49,7 +49,6 @@ export class TournamentsInfoPage implements OnInit {
   constructor(private router:Router, private firestoreService: FirestoreService, private activatedRoute: ActivatedRoute) {
     activatedRoute.queryParams.subscribe(params => {
       this.tournament = JSON.parse(params['tournament'])
-      console.log(this.tournament)
     })
   }
 
@@ -68,7 +67,6 @@ export class TournamentsInfoPage implements OnInit {
         name: event.detail.data.values[0],
         tournament_id: this.tournament['id']
       }
-      console.log(team)
       this.firestoreService.addTeam(team).subscribe(res => {
         this.getTeams()
       })
@@ -81,7 +79,6 @@ export class TournamentsInfoPage implements OnInit {
 
   async getMatches() {
     this.matches = await this.firestoreService.getTournamentMatches(this.tournament['id'])
-    console.log(this.matches)
   }
 
   cancel() {
@@ -108,7 +105,7 @@ export class TournamentsInfoPage implements OnInit {
       return
     }
     this.firestoreService.createMatch(match).subscribe(res => {
-      console.log(res)
+      this.getMatches()
     })
 
   }
@@ -122,7 +119,6 @@ export class TournamentsInfoPage implements OnInit {
 
 
   onSelectTeam(event: any, team: string) {
-    console.log(event)
     if (team == 'team_one') {
       this.team_one_id = event.detail.value['id']
       this.team_one_name = event.detail.value['name']
@@ -134,8 +130,15 @@ export class TournamentsInfoPage implements OnInit {
 
   players(team:any){
     const navigationExtras: NavigationExtras = {
-      queryParams:{ tournament: JSON.stringify(team)}
+      queryParams:{ team: JSON.stringify(team)}
      }
-     this.router.navigate(['admin/players'],navigationExtras)
+     this.router.navigate(['admin/dashboard/team-info'],navigationExtras)
+  }
+
+  matchInfo(match:any){
+    const navigationExtras: NavigationExtras = {
+      queryParams:{ match: JSON.stringify(match)}
+     }
+     this.router.navigate(['admin/dashboard/match-info'],navigationExtras)
   }
 }

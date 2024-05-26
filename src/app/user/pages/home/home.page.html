@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Matches</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-card *ngFor="let match of matches" (click)="goToStats(match)">
+      <ion-card-header style="flex-direction: column;">
+        <ion-card-subtitle>
+          {{match.data.match_date | date}}
+        </ion-card-subtitle>
+        <div></div>
+        <ion-card-title>
+          {{match.data.team_one_name}} vs {{match.data.team_two_name}}
+        </ion-card-title>
+      </ion-card-header>
+    </ion-card>
+  </ion-list>
+</ion-content>

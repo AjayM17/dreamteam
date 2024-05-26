@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FirestoreService } from '../../service/firestore.service';
+import { FirestoreService } from '../../../service/firestore.service';
 import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
@@ -34,18 +34,15 @@ export class TournamentsPage implements OnInit {
   constructor(private firestoreService: FirestoreService,private router:Router) { }
 
   async ngOnInit() {
-    this.tournaments = await this.firestoreService.getTournaments()
-    console.log(this.tournaments)
+   this.getTournaments()
   }
 
   onAlertDismiss(event:any){
-    console.log(event)
     if(event['detail']['role'] == 'confirm'){
       const tournament_name  = event['detail']['data']['values'][0]
-      console.log(tournament_name)
      if(tournament_name.trim() != ''){
       this.firestoreService.createTournament(tournament_name).subscribe( res => {
-        console.log(res)
+        this.getTournaments()
       })
      }
     }
@@ -56,5 +53,9 @@ export class TournamentsPage implements OnInit {
      queryParams:{ tournament: JSON.stringify(tournament)}
     }
     this.router.navigate(['admin/dashboard/tournaments-info'],navigationExtras)
+  }
+
+  async getTournaments(){
+    this.tournaments = await this.firestoreService.getTournaments()
   }
 }

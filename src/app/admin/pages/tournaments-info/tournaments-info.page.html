@@ -1,16 +1,19 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
     <ion-title>{{tournament.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-segment [value]="active_tab" (ionChange)="onSegmentChange($event)">
-    <ion-segment-button value="matches">
-      <ion-label>Matches</ion-label>
-    </ion-segment-button>
     <ion-segment-button value="teams">
       <ion-label>Teams</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="matches">
+      <ion-label>Matches</ion-label>
     </ion-segment-button>
   </ion-segment>
 
@@ -25,7 +28,7 @@
       </ion-card>
 
       <ion-list>
-        <ion-card *ngFor="let match of matches">
+        <ion-card *ngFor="let match of matches" (click)="matchInfo(match)">
           <ion-card-header style="    flex-direction: column;">
             <ion-card-subtitle>
               {{match.data.match_date | date}}
@@ -95,7 +98,7 @@
       </ion-card-header>
     </ion-card>
     <ion-list>
-      <ion-card *ngFor="let team of teams" (click)="players(teams)">
+      <ion-card *ngFor="let team of teams" (click)="players(team)">
         <ion-card-header>
           <ion-card-title>{{team.name}}</ion-card-title>
         </ion-card-header>

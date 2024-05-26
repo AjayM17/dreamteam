@@ -10,7 +10,6 @@ export class LoginPage implements OnInit {
   email = 'ajay@gmail.com'
   password = '12345'
   constructor(private router:Router) {
-    console.log('admin login')
    }
 
   ngOnInit() {

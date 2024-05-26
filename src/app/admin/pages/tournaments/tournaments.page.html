@@ -1,0 +1,31 @@
+
+<div class="ion-page">
+  <ion-header>
+    <ion-toolbar>
+      <ion-menu-toggle>
+        <ion-icon style="font-size: 26px;
+        padding: 0px 10px;" name="menu-outline"></ion-icon>
+      </ion-menu-toggle>
+      <ion-title>Tournaments</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-card id="create-tournament-alert">
+      <ion-card-header>
+        <ion-card-subtitle class="create"><span>Create Tournament</span>
+          <ion-icon name="add"></ion-icon>
+        </ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+    <ion-list>
+      <ion-card *ngFor="let tournament of tournaments" (click)="tournamentInfo(tournament)">
+        <ion-card-header>
+          <ion-card-title>{{tournament.name}}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-list>
+    <ion-alert trigger="create-tournament-alert" header="Create Tournament" [buttons]="alertButtons"
+      [inputs]="alertInputs" (didDismiss)=onAlertDismiss($event)></ion-alert>
+  </ion-content>
+</div>

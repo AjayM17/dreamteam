@@ -1,0 +1,42 @@
+<ng-container *ngIf="player | hs as stats">
+  <div class="player-card" *ngIf="stats['runs_frequency'] != 0 || stats['wicktet_frequency'] != 0 ">
+    <div class="header">
+      <div class="name">{{player.name | titlecase }}</div>
+      <div class="info">
+        <div *ngIf="stats['hr'] != ''" class="text"> <span class="hrw"> {{stats['hr']}}</span> <span
+            class="sub-text">(Highest Run)</span></div>
+        <div *ngIf="stats['hw'] != ''" class="text"><span class="hrw">{{stats['hw']}}</span> <span
+            class="sub-text">(Highest Wicket)</span></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="text" *ngIf="stats['runs_frequency'] != 0">
+        <span class="rf">{{stats['runs_frequency']}}</span> <span class="sub-text">Times (25+ runs In
+          {{stats['batting']}} Innings)</span>
+      </div>
+      <div class="text" *ngIf="stats['wicktet_frequency'] != 0">
+        <span class="wf">{{stats['wicktet_frequency']}} </span> <span class="sub-text">Times (1+ wickets In
+          {{stats['bowling']}} Innings)</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="finfo">
+        <span class="title">Runs:</span>
+        <span class="value" *ngFor="let stat of player.stats">
+          <span class="runs">{{stat.runs}}</span>
+          <span class="vs">(vs {{stat.played_against_team_name}})</span>
+        </span>
+      </div>
+      <div class="finfo">
+        <span class="title">Wickets:</span>
+        <span  *ngFor="let stat of player.stats">
+          <span class="value">
+            <span class="runs">{{stat.wickets}}</span>
+            <span class="vs">(vs {{stat.played_against_team_name}})</span>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FirestoreService } from './admin/service/firestore.service';
+import { FirestoreService } from './service/firestore.service';
 
 @Component({
   selector: 'app-root',

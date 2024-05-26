@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{match.data.team_one_name}} vs {{match.data.team_two_name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment [value]="active_tab" (ionChange)="onSegmentChange($event)">
+    <ion-segment-button value="team_one">
+      <ion-label>{{match.data.team_one_name}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="team_two">
+      <ion-label>{{match.data.team_two_name}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ng-container *ngIf="active_tab == 'team_one'">
+    <ion-list>
+      <app-player-card *ngFor="let  player of team_one_players" [player]="player">
+      </app-player-card>
+    </ion-list>
+  </ng-container>
+
+  <ng-container *ngIf="active_tab == 'team_two'">
+    <ion-list>
+      <app-player-card *ngFor="let  player of team_two_players" [player]="player">
+      </app-player-card>
+    </ion-list>
+  </ng-container>
+
+</ion-content>

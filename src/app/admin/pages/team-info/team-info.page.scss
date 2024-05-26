@@ -1,0 +1,19 @@
+.create{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    ion-icon{
+        font-weight: 500;
+        font-size: 14px;
+    }
+}
+ion-card-title{
+    font-size: 18px;
+}
+
+.modal-list-item{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 18px;
+}

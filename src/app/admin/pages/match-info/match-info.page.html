@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{match.data.team_one_name}} vs {{match.data.team_two_name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment [value]="active_tab" (ionChange)="onSegmentChange($event)">
+    <ion-segment-button value="team_one">
+      <ion-label>{{match.data.team_one_name}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="team_two">
+      <ion-label>{{match.data.team_two_name}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-searchbar (ionInput)="handleInput($event)"  show-clear-button="always"></ion-searchbar>
+
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <ion-col size="6">
+        <ion-label style="font-weight: bold">Name</ion-label>
+      </ion-col>
+      <ion-col size="3">
+        <ion-label style="font-weight: bold">Runs</ion-label>
+      </ion-col>
+      <ion-col size="3">
+        <ion-label style="font-weight: bold">Wickets</ion-label>
+      </ion-col>
+    </ion-row>
+    <ng-container *ngIf="active_tab == 'team_one'">
+      <ion-row *ngFor="let player of team_one_search_results" class="ion-align-items-center">
+        <ion-col size="6">
+          <ion-label>{{player.name}}</ion-label>
+        </ion-col>
+        <ion-col size="3">
+          <ion-input [value]="player.stats[0].runs" (ionBlur)="updatePlayer($event,player,'runs','team_one')"></ion-input>
+        </ion-col>
+        <ion-col size="3">
+          <ion-input [value]="player?.stats[0]?.wickets" (ionBlur)="updatePlayer($event,player,'wickets','team_one')"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+
+    <ng-container *ngIf="active_tab == 'team_two'">
+      <ion-row *ngFor="let player of team_two_search_results" class="ion-align-items-center">
+        <ion-col size="6">
+          <ion-label>{{player.name}}</ion-label>
+        </ion-col>
+        <ion-col size="3">
+          <ion-input [value]="player?.stats[0]?.runs" (ionBlur)="updatePlayer($event,player,'runs','team_two')"></ion-input>
+        </ion-col>
+        <ion-col size="3">
+          <ion-input [value]="player?.stats[0]?.wickets" (ionBlur)="updatePlayer($event,player,'wickets','team_two')"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+  </ion-grid>
+
+</ion-content>

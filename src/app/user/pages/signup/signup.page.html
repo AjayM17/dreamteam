@@ -1,0 +1,21 @@
+<ion-content>
+  <div class="main-container">
+    <ion-item>
+      <ion-input [(ngModel)]="email" placeholder="Email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="password" placeholder="Password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="confirm_password" placeholder="Confirm Password"></ion-input>
+    </ion-item>
+    <ion-button  expand="block"  (click)="register()" >Register</ion-button>
+    <ion-button routerLink="/user/login" class="signup_btn" fill="outline" expand="block" >Back To Login</ion-button>
+  </div>
+  <ion-toast
+  [isOpen]="isToastOpen"
+  [message]="message"
+  [duration]="500"
+  (didDismiss)="setOpen(false)"
+></ion-toast>
+</ion-content>

@@ -35,7 +35,7 @@ export class HighScore implements PipeTransform {
    countGreaterThan24(array: string[]): number {
     let count = 0;
     for (const element of array) {
-      if (parseInt(element) > 24) {
+      if (parseInt(element) > 0) {
         count++;
       }
     }
@@ -50,7 +50,7 @@ export class HighScore implements PipeTransform {
   countGreaterThan1(array: string[]): number {
     let count = 0;
     for (const element of array) {
-      if (parseInt(element) > 1) {
+      if (parseInt(element) > 0) {
         count++;
       }
     }

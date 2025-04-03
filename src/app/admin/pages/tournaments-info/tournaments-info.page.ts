@@ -23,7 +23,7 @@ export class TournamentsInfoPage implements OnInit {
   team_one_name: string = ''
   team_two_id: string = ''
   team_two_name: string = ''
-  match_date: string = new Date().toISOString()
+  match_date: string = "2023-11-02T01:22:00"
   public teamAlertButtons = [
     {
       text: 'Cancel',

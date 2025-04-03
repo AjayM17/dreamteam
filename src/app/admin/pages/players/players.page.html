@@ -10,7 +10,7 @@
   </ion-header>
 
   <ion-content>
-    <ion-card id="create-player-alert">
+    <ion-card  (click)="toggleAction('add')">
       <ion-card-header>
         <ion-card-subtitle class="create"><span>Create Player</span>
           <ion-icon name="add"></ion-icon>
@@ -18,12 +18,20 @@
       </ion-card-header>
     </ion-card>
     <ion-list>
-      <ion-card *ngFor="let player of players">
+      <ion-card *ngFor="let player of players" (click)="toggleActionSheet(player)">
         <ion-card-header>
           <ion-card-title>{{player.name}}</ion-card-title>
         </ion-card-header>
       </ion-card>
     </ion-list>
-    <ion-alert trigger="create-player-alert" header="Create Player" [buttons]="alertButtons"
-      [inputs]="alertInputs" (didDismiss)=onAlertDismiss($event)></ion-alert>
+    <ion-alert 
+    [isOpen]="isAlertOpen"
+    trigger="create-player-alert" header="Create Player" [buttons]="alertButtons"
+      [inputs]="alertInputs" 
+      (didPresent)="onAlertPresent($event)"
+      (didDismiss)=onAlertDismiss($event)>
+    </ion-alert>
+    <ion-action-sheet 
+    (didDismiss)="closeActionSheet($event)"
+    [isOpen]="isSheetOpen" header="Actions" [buttons]="actionSheetButtons"></ion-action-sheet>
   </ion-content>

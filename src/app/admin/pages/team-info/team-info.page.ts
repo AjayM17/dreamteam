@@ -12,6 +12,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 export class TeamInfoPage implements OnInit {
   @ViewChild(IonModal) modal: IonModal | undefined;
 
+  search_key = ''
   message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
   name: string = '';
   team: any
@@ -29,15 +30,14 @@ export class TeamInfoPage implements OnInit {
     this.getAllPlayers()
   }
 
-  handleInput(event: any) {
-    const query = event.target.value.toLowerCase();
+  search() {
+    const query = this.search_key.toLowerCase();
     this.search_result = this.all_players.filter((d) => d.name.toLowerCase().indexOf(query) > -1);
   }
   async getAllPlayers() {
     this.all_players = await this.firestoreService.getAllPlayers()
     this.search_result = [...this.all_players]
   }
-
 
   cancel() {
     this.modal?.dismiss(null, 'cancel');
@@ -54,18 +54,43 @@ export class TeamInfoPage implements OnInit {
     }
   }
 
-  async addPlayer(player: any) {
-    this.modal?.dismiss(null, '');
+  createNewPlayer() {
+    if (this.search_key.trim() != '') {
+      const param = {
+        name: this.search_key,
+        current_team_id: this.team['id']
+      }
+      this.firestoreService.createPlayer(param).subscribe(res => {
+        this.search_key = ''
+        this.search()
+        this.firestoreService.presentToast('Player Created And Added In Team !')
+        this.getTeamPlayers()
+      })
+    }
+  }
+
+
+  async addPlayerInTeam(player: any) {
     const param = {
       current_team_id: this.team['id']
     }
     await this.firestoreService.updatePlayerInfo(player.id, param)
+    this.firestoreService.presentToast('Player Added In Team !')
+    this.getAllPlayers()
     this.getTeamPlayers()
-
   }
 
   async getTeamPlayers() {
     this.team_players = await this.firestoreService.getTeamPlayers(this.team['id'])
   }
 
+  async removePlayerFromTeam(player: any){
+    const param = {
+      current_team_id: ''
+    }
+    await this.firestoreService.updatePlayerInfo(player.id, param)
+    this.firestoreService.presentToast('Player Removed From Team !')
+    this.getAllPlayers()
+    this.getTeamPlayers()
+  }
 }

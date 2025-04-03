@@ -33,13 +33,23 @@
     <ng-container *ngIf="active_tab == 'team_one'">
       <ion-row *ngFor="let player of team_one_search_results" class="ion-align-items-center">
         <ion-col size="6">
-          <ion-label>{{player.name}}</ion-label>
+          <ion-label style="font-weight: 600;
+          font-size: 16px;" >{{player.name}}</ion-label> 
+          <div style="     display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 12px;
+          margin-top: 3px;
+          font-weight: 500;">
+            <span>(In Playing X1)</span>
+            <ion-toggle [checked]="player.stats.id != null ? true : false" (ionChange)="togglePlayerStats(player, 'team_one')"></ion-toggle>
+          </div>
         </ion-col>
         <ion-col size="3">
-          <ion-input [value]="player.stats[0].runs" (ionBlur)="updatePlayer($event,player,'runs','team_one')"></ion-input>
+          <ion-input [disabled]="player.stats.id == null ? true : false" [value]="player.stats.id != null ? player.stats.data.runs : ''" (ionBlur)="updatePlayer($event,player,'runs','team_one')"></ion-input>
         </ion-col>
         <ion-col size="3">
-          <ion-input [value]="player?.stats[0]?.wickets" (ionBlur)="updatePlayer($event,player,'wickets','team_one')"></ion-input>
+          <ion-input  [disabled]="player.stats.id == null ? true : false" [value]="player.stats.id != null ? player.stats.data.wickets : ''" (ionBlur)="updatePlayer($event,player,'wickets','team_one')"></ion-input>
         </ion-col>
       </ion-row>
     </ng-container>
@@ -47,13 +57,22 @@
     <ng-container *ngIf="active_tab == 'team_two'">
       <ion-row *ngFor="let player of team_two_search_results" class="ion-align-items-center">
         <ion-col size="6">
-          <ion-label>{{player.name}}</ion-label>
+          <ion-label style="    font-weight: 600;
+          font-size: 16px;">{{player.name}}</ion-label> 
+          <div style="    display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 13px;
+          margin-top: 3px;">
+            <span>(In Playing X1)</span>
+            <ion-toggle [checked]="player.stats.id != null ? true : false" (ionChange)="togglePlayerStats(player, 'team_two')"></ion-toggle>
+          </div>
         </ion-col>
         <ion-col size="3">
-          <ion-input [value]="player?.stats[0]?.runs" (ionBlur)="updatePlayer($event,player,'runs','team_two')"></ion-input>
+          <ion-input  [disabled]="player.stats.id == null ? true : false" [value]="player.stats.id != null ? player.stats.data.runs : ''" (ionBlur)="updatePlayer($event,player,'runs','team_two')"></ion-input>
         </ion-col>
         <ion-col size="3">
-          <ion-input [value]="player?.stats[0]?.wickets" (ionBlur)="updatePlayer($event,player,'wickets','team_two')"></ion-input>
+          <ion-input  [disabled]="player.stats.id == null ? true : false" [value]="player.stats.id != null ? player.stats.data.wickets : ''" (ionBlur)="updatePlayer($event,player,'wickets','team_two')"></ion-input>
         </ion-col>
       </ion-row>
     </ng-container>

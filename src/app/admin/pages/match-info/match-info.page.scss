@@ -1,14 +1,16 @@
-ion-row{
+ion-row {
   border-left: 1px solid black;
   border-top: 1px solid black;
   border-right: 1px solid black;
 }
-ion-row ion-col:not(:first-child){
+ion-row ion-col:not(:first-child) {
   border-left: 1px solid black;
 }
 
-ion-grid ion-row:last-child{
+ion-grid ion-row:last-child {
   border-bottom: 1px solid black;
 }
 
-
+ion-input[disabled] {
+  --background: lightgrey;
+}

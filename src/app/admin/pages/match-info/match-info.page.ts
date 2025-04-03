@@ -18,6 +18,9 @@ export class MatchInfoPage implements OnInit {
   constructor(private firestoreService: FirestoreService, private activatedRoute: ActivatedRoute) {
     activatedRoute.queryParams.subscribe(params => {
       this.match = JSON.parse(params['match'])
+      const dateObject = new Date(this.match['data']['match_date']);
+      const timestamp = dateObject.getTime();
+      firestoreService.getTimeStamp()
       this.getTeamPlayers()
     })
   }
@@ -26,8 +29,10 @@ export class MatchInfoPage implements OnInit {
   }
 
   async getTeamPlayers() {
+    this.firestoreService.showLoading()
     await this.getTeamOnePlayers()
     await this.getTeamTwoPlayers()
+    this.firestoreService.dismissLoading()
   }
 
   async getTeamOnePlayers() {
@@ -48,55 +53,70 @@ export class MatchInfoPage implements OnInit {
     }
   }
 
-  updatePlayer(event: any, player: any, type: string, team: string) {
-    console.log(player?.stats[0]['match_id'])
-    if (player?.stats.length == 1) {
-      if (player?.stats[0]['match_id'] == null) {
-        const stats: any = {
-          player_id: player['id'],
-          match_id: this.match['id'],
-          tournament_id: this.match['data']['tournament_id'],
-          played_from_team_name: player['current_team_id'] == this.match['data']['team_one_id'] ? this.match['data']['team_one_name'] : this.match['data']['team_two_name'],
-          played_from_team_id: player['current_team_id'] == this.match['data']['team_one_id'] ? this.match['data']['team_one_id'] : this.match['data']['team_two_id'],
-          played_against_team_name: player['current_team_id'] == this.match['data']['team_one_id'] ? this.match['data']['team_two_name'] : this.match['data']['team_one_name'],
-          played_against_team_id: player['current_team_id'] == this.match['data']['team_one_id'] ? this.match['data']['team_two_id'] : this.match['data']['team_one_id'],
-          runs: '',
-          wickets: ''
-        }
-        if (type == 'runs') {
-          stats['runs'] = event.target.value
-        } else {
-          stats['wickets'] = event.target.value
-        }
-        let player_index = -1
-        if (team == 'team_one') {
-          player_index = this.team_one_players.findIndex(team_player => team_player['id'] == player['id'])
-          this.team_one_search_results[player_index]['stats'][0]['match_id'] = this.match['id']
-        } else {
-          player_index = this.team_two_players.findIndex(team_player => team_player['id'] == player['id'])
-          this.team_two_search_results[player_index]['stats'][0]['match_id'] = this.match['id']
-        }
-        this.firestoreService.addPlayerStats(stats).subscribe(res => {
-          this.getTeamPlayers()
-        })
-      } else {
-        if (type == 'runs') {
-          this.firestoreService.updatePlayerStats(player.stats[0].id, {
-            runs: event.target.value
-          }).then(res => {
-            this.getTeamPlayers()
-          })
-        } else {
-          this.firestoreService.updatePlayerStats(player.stats[0].id, {
-            wickets: event.target.value
-          }).then(res => {
-            this.getTeamPlayers()
-          })
-        }
+  togglePlayerStats(player: any,  team: string) {
+    if (player.stats.id == null) {
+      const stats: any = {
+        player_id: player['id'],
+        player_name:player['name'],
+        match_id: this.match['id'],
+        match_time: this.match['data']['match_date'],
+        tournament_id: this.match['data']['tournament_id'],
+        played_from_team_name: player['current_team_id'] == this.match['data']['team_one_id'] ? this.match['data']['team_one_name'] : this.match['data']['team_two_name'],
+        played_from_team_id: player['current_team_id'] == this.match['data']['team_one_id'] ? this.match['data']['team_one_id'] : this.match['data']['team_two_id'],
+        played_against_team_name: player['current_team_id'] == this.match['data']['team_one_id'] ? this.match['data']['team_two_name'] : this.match['data']['team_one_name'],
+        played_against_team_id: player['current_team_id'] == this.match['data']['team_one_id'] ? this.match['data']['team_two_id'] : this.match['data']['team_one_id'],
+        runs: '',
+        wickets: ''
       }
-
+      this.firestoreService.addPlayerStats(stats).subscribe(res => {
+        player.stats.id = res.id
+        if (team == 'team_one') {
+         
+          this.updatePlayerStats(this.team_one_players,player)
+          this.updatePlayerStats(this.team_one_search_results,player)
+        } else {
+         
+          this.updatePlayerStats(this.team_two_players,player)
+          this.updatePlayerStats(this.team_two_search_results,player)
+        }
+      })
     } else {
-      alert('Error: Mutiple value voilation')
+      this.firestoreService.deletePlayerStats(player.stats.id).then( res => {
+        player.stats.id = null
+        player.stats.data.runs = null
+        player.stats.data.wickets = null
+        if (team == 'team_one') {
+          this.updatePlayerStats(this.team_one_players,player)
+          this.updatePlayerStats(this.team_one_search_results,player)
+        } else {
+          this.updatePlayerStats(this.team_two_players,player)
+          this.updatePlayerStats(this.team_two_search_results,player)
+        }
+      })
+    }
+
+  }
+
+
+  updatePlayerStats(team:any[],player:any){
+    team.forEach(tplayer => {
+      if (tplayer.id == player['id']) {
+        tplayer.stats = player['stats']
+        return
+      }
+    });
+  }
+  updatePlayer(event: any, player: any, type: string, team: string) {
+    if(player.stats.id != null){
+      if (type == 'runs') {
+            this.firestoreService.updatePlayerStats(player.stats.id, {
+              runs: event.target.value
+            })
+          } else {
+            this.firestoreService.updatePlayerStats(player.stats.id, {
+              wickets: event.target.value
+            })
+          }
     }
   }
 

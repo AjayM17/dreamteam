@@ -36,19 +36,32 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 // @import "@ionic/angular/css/palettes/dark.system.css";
 
-
-@media(min-width: 768px) {
-    ion-content{
+@media (min-width: 768px) {
+    ion-content {
         --padding-start: 12%;
-    --padding-end: 12%;
+        --padding-end: 12%;
     }
 }
-
 
 ion-input {
     --caret-color: none !important;
     --highlight-color-focused: none !important;
     --highlight-color-valid: none;
-    --highlight-color-invalid:none;
-    --highlight-color:none;
-    }
+    --highlight-color-invalid: none;
+    --highlight-color: none;
+}
+ion-toggle {
+    padding: 0px;
+}
+ion-toggle::part(track) {
+    height: 18px;
+    width: 50px;
+
+    /* Required for iOS handle to overflow the height of the track */
+    overflow: visible;
+}
+
+// ion-toggle::part(handle) {
+//     width: 20px;
+//     left: 10px;
+// }

@@ -16,4 +16,17 @@ ion-card-title{
     justify-content: space-between;
     width: 100%;
     font-size: 18px;
+    ion-icon{
+        background: var(--ion-color-primary);
+        color: white;
+        border-radius: 50%;
+    }
+    & .add{
+        padding: 4px;
+    }
+    & .remove{
+        padding: 0px;
+        font-size: 25px;
+    }
+
 }

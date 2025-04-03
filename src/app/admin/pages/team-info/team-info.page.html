@@ -15,9 +15,14 @@
     </ion-card-header>
   </ion-card>
   <ion-list>
-    <ion-card *ngFor="let player of team_players" >
+    <ion-card *ngFor="let player of team_players; let i = index" >
       <ion-card-header>
-        <ion-card-title>{{player.name}}</ion-card-title>
+        <ion-card-title>
+          <div class="modal-list-item">
+            <div>{{i+1}}. {{player.name}} </div>
+            <ion-icon (click)="removePlayerFromTeam(player)" name="remove-outline"></ion-icon>
+           </div>
+        </ion-card-title>
       </ion-card-header>
     </ion-card>
   </ion-list>
@@ -31,20 +36,22 @@
           </ion-buttons>
           <ion-title>Add Player</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+            <ion-button [disabled]="search_result.length != 0" (click)="createNewPlayer()" [strong]="true">Add New</ion-button>
           </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar>
+          <ion-searchbar [(ngModel)]="search_key" (ionInput)="search()" style="    padding: 0;"  show-clear-button="always"></ion-searchbar>
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <ion-searchbar (ionInput)="handleInput($event)" style="    padding: 0;"  show-clear-button="always"></ion-searchbar>
-
         <ion-list>
-          <ion-item *ngFor="let player of search_result" (click)="addPlayer(player)">
-           <div class="modal-list-item">
-            <div>{{player.name}} </div>
-            <ion-icon name="add-circle-outline"></ion-icon>
-           </div>
-          </ion-item>
+            <ion-item *ngFor="let player of search_result"  >
+              <div class="modal-list-item">
+               <div>{{player.name}} </div>
+               <ion-icon class="add" (click)="addPlayerInTeam(player)" *ngIf="player.current_team_id != team.id" name="add-outline"></ion-icon>
+               <ion-icon class="remove" (click)="removePlayerFromTeam(player)" *ngIf="player.current_team_id == team.id" name="remove-circle"></ion-icon>
+              </div>
+             </ion-item>
         </ion-list>
       </ion-content>
     </ng-template>

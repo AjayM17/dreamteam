@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { environment } from 'src/environments/environment';
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, limit, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 import { Observable } from 'rxjs';
-import { LoadingController } from '@ionic/angular';
-
+import { LoadingController, ToastController } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,9 +12,9 @@ export class FirestoreService {
   app: FirebaseApp | undefined
   db: any
   loading: HTMLIonLoadingElement | undefined;
-  constructor(private loadingCtrl: LoadingController) { }
+  constructor(private toastController: ToastController, private loadingCtrl: LoadingController) { }
   initializeFirebase() {
-    this.app = initializeApp(environment.firebase_dev)
+    this.app = initializeApp(environment.firebase)
     this.db = getFirestore(this.app)
   }
 
@@ -24,12 +23,10 @@ export class FirestoreService {
    * Players Services
    * **/
 
-  createPlayer(name: string): Observable<any> {
+  createPlayer(info: any): Observable<any> {
     return new Observable((observer) => {
       try {
-        addDoc(collection(this.db, "players"), {
-          name: name
-        })
+        addDoc(collection(this.db, "players"), info)
           .then(docRef => {
             observer.next(docRef)
           })
@@ -39,33 +36,58 @@ export class FirestoreService {
   }
 
   async getAllPlayers() {
-    return (await (await getDocs(collection(this.db, "players"))).docs.map(data => ({ id: data.id, name: data.data()['name'], current_team_id: data.data()['current_team_id'] })))
+    const q = query(collection(this.db, "players"), orderBy("name"));
+    return (await (await getDocs(q))).docs.map(data => ({ id: data.id, name: data.data()['name'], current_team_id: data.data()['current_team_id'] }))
   }
+
 
   async getTeamPlayers(team_id: string) {
     const q = query(collection(this.db, "players"), where("current_team_id", "==", team_id));
     return (await (await getDocs(q)).docs.map(data => ({ id: data.id, name: data.data()['name'], current_team_id: data.data()['current_team_id'] })))
   }
 
-
   async getTeamPlayersWithMatchStat(team_id: any, match_id: any) {
+    const players_query = query(collection(this.db, "players"), where("current_team_id", "==", team_id));
+    const stats_query = query(collection(this.db, "player_stats"), where("match_id", "==", match_id));
+
+    const playerSnapShot = await getDocs(players_query)
+    const statsSnapShot = await getDocs(stats_query)
+    const playerWithStats = playerSnapShot.docs.map(player => {
+      const pstats = statsSnapShot.docs.find(stats => stats.data()['player_id'] == player.id)
+      let stats: any = {
+        id: null,
+        data: {
+          player_id: null,
+          match_id: null,
+          tournament_id: null,
+          played_from_team_name: null,
+          played_from_team_id: null,
+          played_against_team_name: null,
+          played_against_team_id: null,
+          runs: null,
+          wickets: null
+        }
+      }
+      if (pstats != null) {
+        stats['id'] = pstats.id
+        stats['data'] = pstats.data()
+      }
+      return ({ id: player.id, ...player.data(), stats: stats })
+    })
+    return playerWithStats
+  }
+
+  async getTeamPlayersWithMatchStatOld(team_id: any, match_id: any) {
     try {
       const players_query = query(collection(this.db, "players"), where("current_team_id", "==", team_id));
       const playerSnapShot = await getDocs(players_query)
       const players: any = [];
+      playerSnapShot
       playerSnapShot.forEach(doc => {
-        players.push({ id: doc.id, ...doc.data() });
-      });
-      for (const player of players) {
-        const stats_query = query(collection(this.db, "player_stats"), where("player_id", "==", player.id), where("match_id", "==", match_id));
-        let statSnapShot = await getDocs(stats_query)
-        let stats: any = []
-        statSnapShot.forEach(doc => {
-          stats.push({ id: doc.id, ...doc.data() });
-        });
-        if(stats.length == 0){
-          const stat = {
-            id: null,
+        const stats_query = query(collection(this.db, "player_stats"), where("player_id", "==", doc.id), where("match_id", "==", match_id));
+        let stats: any = {
+          id: null,
+          data: {
             player_id: null,
             match_id: null,
             tournament_id: null,
@@ -76,10 +98,40 @@ export class FirestoreService {
             runs: null,
             wickets: null
           }
-          stats.push(stat)
         }
-        player.stats = stats;
-      }
+
+        getDocs(stats_query).then(res => {
+          if (res.docs.length != 0) {
+            stats['data'] = res.docs[0].data()
+            stats['id'] = res.docs[0].id
+          }
+        })
+        players.push({ id: doc.id, ...doc.data(), stats: stats })
+      });
+      // for (const player of players) {
+      //   // console.log(player)
+      //   const stats_query = query(collection(this.db, "player_stats"), where("player_id", "==", player.id), where("match_id", "==", match_id));
+      //   let statSnapShot = await getDocs(stats_query)
+      //   let stat: any = {
+      //     id: null,
+      //     data: {
+      //       player_id: null,
+      //       match_id: null,
+      //       tournament_id: null,
+      //       played_from_team_name: null,
+      //       played_from_team_id: null,
+      //       played_against_team_name: null,
+      //       played_against_team_id: null,
+      //       runs: null,
+      //       wickets: null
+      //     }
+      //   }
+      //   statSnapShot.forEach(doc => {
+      //     stat['data'] = doc.data()
+      //     stat['id'] = doc.id
+      //   });
+      //   player.stats = stat;
+      // }
       return players;
     } catch (error) {
     }
@@ -115,6 +167,10 @@ export class FirestoreService {
       } catch (e) {
       }
     })
+  }
+
+  async deletePlayerStats(stats_id: string) {
+    await deleteDoc(doc(this.db, "player_stats", stats_id));
   }
 
   async updatePlayerStats(stats_id: string, info: any) {
@@ -226,6 +282,12 @@ export class FirestoreService {
     return (await (await getDocs(q)).docs.map(data => ({ id: data.id })))
   }
 
+  async getTwoTeamPlayerAndStats(teams:any[],tournament_id:any){
+    const player_stats_query = query(collection(this.db,"player_stats"),where("played_from_team_id", "in", teams),where("tournament_id", "==", tournament_id))
+    return await (await getDocs(player_stats_query)).docs.map(data => ({  ...data.data(), id: data.id }))
+    
+  }
+
   async getTeamPlayerTournamentStats(team_id: any, tournament_id: any) {
     try {
       const players_query = query(collection(this.db, "players"), where("current_team_id", "==", team_id));
@@ -254,8 +316,40 @@ export class FirestoreService {
     this.loading.present();
   }
   dismissLoading() {
-    if(this.loading != null && this.loading != undefined){
+    if (this.loading != null && this.loading != undefined) {
       this.loading.dismiss()
     }
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1000,
+      position: 'bottom',
+    });
+
+    await toast.present();
+  }
+
+  getTimeStamp(){
+    const timestamp = 1717230960000; // for example
+
+    // Create a new Date object using the timestamp
+    const dateObject = new Date(timestamp);
+    
+    // Get the components of the date
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1; // Months are zero-based, so January is 0
+    const day = dateObject.getDate();
+    const hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
+    const seconds = dateObject.getSeconds();
+    
+    // Assemble the date string
+    const dateString = year + "-" + (month < 10 ? "0" + month : month) + "-" + (day < 10 ? "0" + day : day) + " " +
+                       (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                       (seconds < 10 ? "0" + seconds : seconds);
+    
+    console.log(dateString);
   }
 }
